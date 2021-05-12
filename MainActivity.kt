@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.LifecycleOwner
 import com.coolcats.dailyquote.R
+import com.coolcats.dailyquote.R.layout.quote_fragment
+import com.coolcats.dailyquote.model.QuoteResponseItem
 import com.coolcats.dailyquote.modelview.QuoteViewModel
 import com.coolcats.dailyquote.util.QuoteAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,11 +34,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, QuoteAdapter.OnItemCli
         viewModel.getQuotesFromServer()
     }
 
-    override fun onItemClick(position: Int) {
-        openFragment(QuoteDetailsFragment())
+    override fun onItemClick(quote: QuoteResponseItem) {
+        openFragment(quote)
     }
 
-    private fun openFragment(fragment: QuoteDetailsFragment){
-        setContentView(R.layout.quote_fragment)
+    private fun openFragment(quote: QuoteResponseItem){
+        //setContentView(quote_fragment, quote)
+        val frag = QuoteDetailsFragment.newInstance(quote)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.details_frame, frag)
+            .addToBackStack(frag.tag)
+            .commit()
+
     }
 }
